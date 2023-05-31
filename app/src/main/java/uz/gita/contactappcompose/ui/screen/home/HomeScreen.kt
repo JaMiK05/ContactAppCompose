@@ -56,12 +56,6 @@ private fun HomeScreenContent(
 ) {
     val navigator = LocalNavigator.currentOrThrow
 
-    if (uiState.editOrAddContactState) {
-        navigator.push(AddContactScreen(uiState.contact))
-        onEventDispatcher(HomeContract.Intent.CloseEditOrAddContact)
-    }
-
-
     Scaffold(modifier = Modifier.fillMaxSize(), topBar = {
         TopAppBar(title = {
             Text("Contacts")

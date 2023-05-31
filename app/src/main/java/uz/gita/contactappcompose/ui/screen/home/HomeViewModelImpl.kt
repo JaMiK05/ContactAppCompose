@@ -13,11 +13,13 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import uz.gita.contactappcompose.data.model.ContactData
 import uz.gita.contactappcompose.domain.repository.crud.AppRepository
+import uz.gita.contactappcompose.ui.screen.home.direction.HomeScreenDirection
 import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModelImpl @Inject constructor(
     private val repository: AppRepository,
+    private val direction: HomeScreenDirection,
 ) : ViewModel(), HomeContract.ViewModel {
 
 
@@ -37,8 +39,15 @@ class HomeViewModelImpl @Inject constructor(
 
     override fun onEventDispatcher(intent: HomeContract.Intent) {
         when (intent) {
-            is HomeContract.Intent.OpenEditOrAddContact -> uiState.update {
+            is HomeContract.Intent.OpenEditOrAddContact -> {
+                viewModelScope.launch {
+                    direction.navigateToAddScreen(intent.data)
+                }
+                /*
+                uiState.update {
                 it.copy(contact = intent.data, editOrAddContactState = true)
+                }
+                */
             }
 
             is HomeContract.Intent.Delete -> {

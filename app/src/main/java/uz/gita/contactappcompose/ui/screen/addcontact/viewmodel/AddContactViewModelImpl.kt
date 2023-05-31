@@ -1,16 +1,15 @@
 package uz.gita.contactappcompose.ui.screen.addcontact.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import uz.gita.contactappcompose.data.model.ContactData
 import uz.gita.contactappcompose.domain.repository.crud.AppRepository
+import uz.gita.contactappcompose.ui.screen.addcontact.direction.AddScreenDirection
 import uz.gita.contactappcompose.ui.screen.home.HomeContract
 import javax.inject.Inject
 
@@ -18,23 +17,22 @@ import javax.inject.Inject
 @HiltViewModel
 class AddContactViewModelImpl @Inject constructor(
     private val repository: AppRepository,
+    private val direction: AddScreenDirection,
 ) : ViewModel(), AddContract.ViewModel {
 
     override val uiState = MutableStateFlow(AddContract.UiState())
 
     override fun onEventDispatcher(intent: AddContract.Intent) {
         when (intent) {
-            is AddContract.Intent.OpenEditOrAddContact -> uiState.update {
-                it.copy(back = false)
-            }
-
-            is AddContract.Intent.CloseEditOrAddContact -> uiState.update {
+            is AddContract.Intent.CloseEditOrAddContact -> {
                 if (intent.str == null) {
                     addContact(intent.data)
                 } else {
                     updateContact(intent.data)
                 }
-                it.copy(back = true)
+                viewModelScope.launch {
+                    direction.navigateToHomeScreen()
+                }
             }
         }
     }

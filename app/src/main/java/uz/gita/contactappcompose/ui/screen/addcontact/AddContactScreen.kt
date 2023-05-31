@@ -57,11 +57,6 @@ fun AddContactScreenContent(
 ) {
 
     val navigator = LocalNavigator.currentOrThrow
-    if (uiState.back) {
-        navigator.pop()
-        onEvenDispatcher(AddContract.Intent.OpenEditOrAddContact)
-    }
-
     var fname by remember {
         mutableStateOf(data1?.firstName ?: "")
     }

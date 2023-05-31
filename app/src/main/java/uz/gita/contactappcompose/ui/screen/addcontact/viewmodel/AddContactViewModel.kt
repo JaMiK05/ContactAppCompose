@@ -7,12 +7,10 @@ interface AddContract {
 
     sealed interface Intent {
         class CloseEditOrAddContact(val data: ContactData, val str: String?) : Intent
-        object OpenEditOrAddContact : Intent
-
     }
 
     data class UiState(
-        val back: Boolean = false,
+        val bool: Boolean = true,
     )
 
     interface ViewModel {
